@@ -39,11 +39,27 @@ export default function App() {
             : 1,
       };
       return {
+        ...prevState,
         projects: [...prevState.projects, projectToAdd],
         selectedProjectId: projectToAdd.id,
       };
     });
   };
+
+  const handleDeleteProject = (id) => {
+    setProjectsState((prevState) => {
+      const filteredProjects = prevState.projects.filter(
+        (project) => project.id !== id
+      );
+      return {
+        ...prevState,
+        projects: filteredProjects,
+        selectedProjectId:
+          filteredProjects.length > 0 ? filteredProjects[0].id : undefined,
+      };
+    });
+  };
+
   let selectedProject;
   if (projectsState.selectedProjectId)
     selectedProject = projectsState.projects.filter(
@@ -64,7 +80,10 @@ export default function App() {
       ) : projectsState.selectedProjectId === undefined ? (
         <NoProjectSelected onStartAddProject={handleStartAddProject} />
       ) : (
-        <SelectedProject project={selectedProject[0]} />
+        <SelectedProject
+          project={selectedProject[0]}
+          onDeleteProject={handleDeleteProject}
+        />
       )}
     </main>
   );
